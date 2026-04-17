@@ -1,1 +1,83 @@
-https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5TmNPMe6Yd_VQFKajHf4HC-tesS0Wi3z2kw&s
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>POS TCG</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <link rel="apple-touch-icon" href="https://i.ibb.co.com/W4Sc0sbX/Whats-App-Image-2026-04-15-at-6-05-18-PM.jpg">
+    
+    <style>
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #1a1a1d; /* Matches your portal background */
+            font-family: sans-serif;
+        }
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+        }
+        
+        /* New Wake-Up Screen Styling */
+        #wakeup-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #1a1a1d; color: #F0F0F0; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 100;
+        }
+        .btn { 
+            padding: 15px 30px; background: #3B4CCA; color: white; border: none; 
+            border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; 
+            box-shadow: 0px 4px 0px rgba(0,0,0,0.5);
+        }
+        .btn:active { transform: translateY(4px); box-shadow: none; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="wakeup-screen" class="hidden">
+        <h2 style="color: #3B4CCA; text-transform: uppercase; font-weight: 900; letter-spacing: 1px;">Connection Paused</h2>
+        <p style="text-align: center; padding: 0 20px; color: #ccc;">Your phone blocked the Google login cookie.<br><br>Tap below to quickly verify your connection.</p>
+        <button class="btn" onclick="wakeUpServer()">Tap to Connect</button>
+    </div>
+
+    <iframe id="app-frame" src="https://script.google.com/macros/s/AKfycby3BxT1J4LMVImSf9ZcrjY1DvzUdYZXYPQ8nqkeLRuFbXS8OaJyqUEZ_7rCCJlM5nspvQ/exec"></iframe>
+
+    <script>
+        var gasUrl = "https://script.google.com/macros/s/AKfycby3BxT1J4LMVImSf9ZcrjY1DvzUdYZXYPQ8nqkeLRuFbXS8OaJyqUEZ_7rCCJlM5nspvQ/exec";
+        var frame = document.getElementById('app-frame');
+        var wakeup = document.getElementById('wakeup-screen');
+
+        // If the iframe doesn't finish loading in 4 seconds, show the wakeup screen
+        var loadTimeout = setTimeout(function() {
+            wakeup.classList.remove('hidden');
+        }, 4000);
+
+        // If it loads successfully, clear the timeout so the screen stays hidden
+        frame.onload = function() {
+            clearTimeout(loadTimeout);
+            wakeup.classList.add('hidden');
+        };
+
+        function wakeUpServer() {
+            // 1. Open GAS directly in Safari/Chrome to force the phone to accept the cookie
+            window.open(gasUrl, "_blank");
+            
+            // 2. Hide the warning screen
+            wakeup.classList.add('hidden');
+            
+            // 3. Give the phone 2 seconds to register the cookie, then refresh the iframe locally
+            setTimeout(function() {
+                frame.src = gasUrl;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
